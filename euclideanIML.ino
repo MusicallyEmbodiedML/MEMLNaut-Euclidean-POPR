@@ -73,8 +73,40 @@ void setup()
     Serial.println("Initializing MIDI...");
     midi_interf = std::make_shared<MIDIInOut>();
     midi_interf->Setup(CURRENT_AUDIO_APP::kN_Params);
-    midi_interf->SetMIDISendChannel(1);
+    //midi_interf->SetMIDISendChannel(1);
     Serial.println("MIDI setup complete.");
+    midi_interf->SetAdvancedParamMappings({
+        // 1
+        {16, 1, 0, 127}, // Tune
+        {18, 1, 0, 127}, // Bit crush
+        {74, 1, 0, 60}, // Filt freq
+        {75, 1, 0, 127}, // Filt reso
+        // 2
+        {16, 2, 0, 127},
+        {18, 2, 0, 127},
+        {74, 2, 70, 127},
+        {75, 2, 0, 127},
+        // 3
+        {16, 3, 0, 127},
+        {23, 3, 0, 127}, // Sample level
+        {74, 3, 70, 127},
+        {75, 3, 0, 127},
+        // 4
+        {16, 4, 0, 127},
+        {23, 4, 0, 127},
+        {74, 4, 70, 127},
+        {75, 4, 0, 127},
+        // 5
+        {16, 5, 0, 127},
+        {23, 5, 0, 127}, // Sample level
+        {74, 5, 70, 127},
+        {75, 5, 0, 127},
+        // 6
+        {16, 6, 0, 127},
+        {23, 6, 0, 127},
+        {74, 6, 70, 127},
+        {75, 6, 0, 127}
+    });
 
     delay(100); // Allow Serial2 to stabilize
 
