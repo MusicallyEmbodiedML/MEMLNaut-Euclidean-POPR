@@ -8,6 +8,7 @@
 
 // Example apps and interfaces
 #include "src/memllib/examples/IMLInterface.hpp"
+//#include "src/memllib/examples/InterfaceRL.hpp"
 
 #include "src/memllib/hardware/memlnaut/display.hpp"
 
@@ -95,12 +96,21 @@ void setup()
     }
     // ...and MIDI
     euclidean_midi = std::make_unique<EuclideanMIDI>();
-    // Note numbers: range from C4 to C4 + kMaxOperators - 1
-    std::vector<uint8_t> note_numbers(EuclideanMIDI::kMaxOperators);
+    // Note configurations: range from C4 to C4 + kMaxOperators - 1, with channels 1 to kMaxOperators
+    std::vector<MIDINoteConfig> note_configs(EuclideanMIDI::kMaxOperators);
     for (size_t i = 0; i < EuclideanMIDI::kMaxOperators; ++i) {
-        note_numbers[i] = 60 + i; // C4
+        note_configs[i] = MIDINoteConfig(60 + i, i + 1); // C4 + i on channel i + 1
     }
-    euclidean_midi->Setup(midi_interf, note_numbers, 1); // MIDI channel 1
+    // Sequence of fifths starting from C3 (48)
+    note_configs[0] = {48, 1};  // C3 - Root
+    note_configs[1] = {60, 2};  // G3 - Fifth
+    note_configs[2] = {55, 3};  // D4 - Ninth (second fifth)
+    note_configs[3] = {60, 4};  // A4 - Thirteenth (third fifth)
+    note_configs[4] = {60, 5};  // E5 - Seventeenth (fourth fifth)
+    note_configs[5] = {60, 6};  // B5 - Twenty-first (fifth fifth)
+    note_configs[6] = {60, 7};  // F#6 - Twenty-fifth (sixth fifth)
+    note_configs[7] = {60, 8};  // C#7 - Twenty-ninth (seventh fifth)
+    euclidean_midi->Setup(midi_interf, note_configs);
     Serial.println("Euclidean MIDI interface initialized.");
 
     // Setup interface with memory barrier protection
